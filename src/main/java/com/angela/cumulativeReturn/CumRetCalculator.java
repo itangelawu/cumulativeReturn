@@ -14,11 +14,12 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class CumRetCalculator {
     //Storage for daily returns for various days from B
-    private TreeMap<Date, BigDecimal> dailyReturns;
+    private TreeMap<Date, Double> dailyReturnsMap;
     private Map<DateRange, Double> dailyReturnCache;
 
-    public CumRetCalculator(String fileName) {
-        this.dailyReturns = DailyReturns.getDailyReturns(fileName);
+    public CumRetCalculator(Map<Date, Double> dailyReturnsInput) {
+        DailyReturns dailyReturns = DailyReturns.getDailyReturns();
+        this.dailyReturnsMap = dailyReturns.loadMap(dailyReturnsInput);
         dailyReturnCache = new ConcurrentHashMap<DateRange, Double>();
     }
 
@@ -33,13 +34,13 @@ public class CumRetCalculator {
     }
 
     double computeCumReturn(DateRange range) {
-        Map<Date, BigDecimal> rangeReturn = this.dailyReturns.subMap(range.getBase(), false, range.getAsOf(), true);
+        Map<Date, Double> rangeReturn = this.dailyReturnsMap.subMap(range.getBase(), false, range.getAsOf(), true);
         BigDecimal result = new BigDecimal(1);
-        for (BigDecimal cumReturn: rangeReturn.values()){
-            result = result.multiply(cumReturn.add(new BigDecimal(1)));
+        for (Double cumReturn: rangeReturn.values()){
+            result = result.multiply(new BigDecimal(cumReturn).add(new BigDecimal(1)));
         }
 
-        return (result.subtract(new BigDecimal(1))).doubleValue();
+        return (result.subtract(new BigDecimal(1))).setScale(8, BigDecimal.ROUND_HALF_EVEN).doubleValue();
     }
 
     class DateRange{
