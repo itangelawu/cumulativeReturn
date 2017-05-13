@@ -26,8 +26,7 @@ public class CumRetCalculator {
         if(asOf.before(base))
             return Double.NaN;
         DateRange range = new DateRange(asOf, base);
-        if (!dailyReturnCache.containsKey(range))
-            dailyReturnCache.putIfAbsent(range, computeCumReturn(range));
+        dailyReturnCache.putIfAbsent(range, computeCumReturn(range));
 
         return dailyReturnCache.get(range);
 
