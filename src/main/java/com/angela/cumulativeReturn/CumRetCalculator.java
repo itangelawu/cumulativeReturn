@@ -18,8 +18,8 @@ public class CumRetCalculator {
     private Map<DateRange, Double> dailyReturnCache;
 
     public CumRetCalculator(Map<Date, Double> dailyReturnsInput) {
-        DailyReturns dailyReturns = DailyReturns.getDailyReturns();
-        this.dailyReturnsMap = dailyReturns.loadMap(dailyReturnsInput);
+        DailyReturns dailyReturns = DailyReturns.getDailyReturns(dailyReturnsInput);
+        this.dailyReturnsMap = dailyReturns.getDailyReturnsMap();
         dailyReturnCache = new ConcurrentHashMap<DateRange, Double>();
     }
 

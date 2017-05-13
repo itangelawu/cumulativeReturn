@@ -6,24 +6,25 @@ import java.util.*;
  * Created by Angela on 5/12/2017.
  */
 public class DailyReturns {
-    private static TreeMap<Date, Double> dailyReturns;
+    private TreeMap<Date, Double> dailyReturnsMap;
     private static DailyReturns instance;
 
-    private DailyReturns(){
+    private DailyReturns(Map<Date, Double> dailyReturnsInput){
+        dailyReturnsMap = loadMap(dailyReturnsInput);
     }
 
-    public static DailyReturns getDailyReturns(){
+    public static DailyReturns getDailyReturns(Map<Date, Double> dailyReturnsInput){
         if(instance == null){
             synchronized (DailyReturns.class) {
                 if(instance == null){
-                    instance = new DailyReturns();
+                    instance = new DailyReturns(dailyReturnsInput);
                 }
             }
         }
         return instance;
     }
 
-    public TreeMap<Date, Double> loadMap(Map<Date, Double> dailyReturnsInput){
+    private TreeMap<Date, Double> loadMap(Map<Date, Double> dailyReturnsInput){
         List<String> lines = new ArrayList<>();
         TreeMap<Date, Double> result =  new TreeMap<Date, Double>(new Comparator<Date>()
         {
@@ -36,6 +37,10 @@ public class DailyReturns {
         result.putAll(dailyReturnsInput);
 
         return result;
+    }
+
+    public TreeMap<Date, Double> getDailyReturnsMap(){
+        return dailyReturnsMap;
     }
 
 

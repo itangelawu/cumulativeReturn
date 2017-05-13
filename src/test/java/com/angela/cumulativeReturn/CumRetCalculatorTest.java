@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -17,7 +19,13 @@ class CumRetCalculatorTest {
     private Date baseDate;
     @BeforeEach
     void setUp() {
-        cumRetCalculator = new CumRetCalculator("C://workspace//cumulativeReturn//src//test//resources//test1.txt");
+        Map<Date, Double> dailyReturnsInput = new HashMap<Date, Double>();
+        dailyReturnsInput.put(getDate("2015-01-10"), 0.10);
+        dailyReturnsInput.put(getDate("2015-02-10"), 0.05);
+        dailyReturnsInput.put(getDate("2015-04-10"), 0.15);
+        dailyReturnsInput.put(getDate("2015-04-15"), -0.10);
+        dailyReturnsInput.put(getDate("2015-06-10"), -0.12);
+        cumRetCalculator = new CumRetCalculator(dailyReturnsInput);
         baseDate = getDate("2015-02-01");
     }
 
