@@ -13,16 +13,28 @@ import java.util.concurrent.ConcurrentHashMap;
  * Created by Angela on 5/12/2017.
  */
 public class CumRetCalculator {
-    //Storage for daily returns for various days from B
-    private TreeMap<Date, Double> dailyReturnsMap;
-    private Map<DateRange, Double> dailyReturnCache;
 
+    private TreeMap<Date, Double> dailyReturnsMap; //Storage holds daily returns for various days from B
+    private Map<DateRange, Double> dailyReturnCache; //cache which hold calculation result for a range of asof date to base date
+
+    /**
+     * constructor to initialize dailyReturnsMap and the cache
+     * @param dailyReturnsInput inputMap
+     */
     public CumRetCalculator(Map<Date, Double> dailyReturnsInput) {
         DailyReturns dailyReturns = DailyReturns.getDailyReturns(dailyReturnsInput);
         this.dailyReturnsMap = dailyReturns.getDailyReturnsMap();
         dailyReturnCache = new ConcurrentHashMap<DateRange, Double>();
     }
 
+    /**
+     * method to get cumulative return for asof date from base date
+     * look up calculation result in cache first, if not in cache, calculate new value, put into cache, then return the value
+     * If it is in cache, fetch and return
+     * @param asOf asOf date
+     * @param base base date
+     * @return double cumulative return for asof date from base date
+     */
     double findCumReturn(Date asOf, Date base){
         if(asOf.before(base))
             return Double.NaN;
@@ -32,10 +44,14 @@ public class CumRetCalculator {
         if(result==null)
             return dailyReturnCache.get(range);
         else
-            return result.doubleValue();
-
+            return result;
     }
 
+    /**
+     * method to calculate cumulative return for asof date from base date
+     * @param range asOf date and base date object
+     * @return double cumulative return for asof date from base date
+     */
     double computeCumReturn(DateRange range) {
         Map<Date, Double> rangeReturn = this.dailyReturnsMap.subMap(range.getBase(), false, range.getAsOf(), true);
         BigDecimal result = new BigDecimal(1);
@@ -46,6 +62,10 @@ public class CumRetCalculator {
         return (result.subtract(new BigDecimal(1))).setScale(8, BigDecimal.ROUND_HALF_EVEN).doubleValue();
     }
 
+    /**
+     * class for asOf date and base date
+     * served as a key for cahce
+     */
     class DateRange{
         private Date asOf;
         private Date base;

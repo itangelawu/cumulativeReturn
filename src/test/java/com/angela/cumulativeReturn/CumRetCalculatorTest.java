@@ -17,6 +17,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class CumRetCalculatorTest {
     private CumRetCalculator cumRetCalculator;
     private Date baseDate;
+
+    /**
+     * set up daily return map
+     */
     @BeforeEach
     void setUp() {
         Map<Date, Double> dailyReturnsInput = new HashMap<Date, Double>();
@@ -29,6 +33,9 @@ class CumRetCalculatorTest {
         baseDate = getDate("2015-02-01");
     }
 
+    /**
+     * test various as date and base date
+     */
     @Test
     void testFindCumReturn() {
         double test0 = cumRetCalculator.findCumReturn(getDate("2015-01-31"), baseDate);
@@ -45,6 +52,9 @@ class CumRetCalculatorTest {
         assertEquals(-0.04366, test5);
     }
 
+    /**
+     * method to get date from string
+     */
     private Date getDate(String date){
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         try {
