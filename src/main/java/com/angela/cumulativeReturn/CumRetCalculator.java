@@ -27,9 +27,12 @@ public class CumRetCalculator {
         if(asOf.before(base))
             return Double.NaN;
         DateRange range = new DateRange(asOf, base);
-        dailyReturnCache.putIfAbsent(range, computeCumReturn(range));
+        Double result = dailyReturnCache.putIfAbsent(range, computeCumReturn(range));
 
-        return dailyReturnCache.get(range);
+        if(result==null)
+            return dailyReturnCache.get(range);
+        else
+            return result.doubleValue();
 
     }
 
